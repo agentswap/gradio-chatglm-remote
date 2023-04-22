@@ -1,6 +1,8 @@
 import re
+import os
 import json
 import gradio as gr
+from fastapi import FastAPI
 from gradio_client import Client
 
 def process_text(text):
@@ -33,4 +35,7 @@ with gr.Blocks() as demo:
     txt.submit(predict, [txt, state], [chatbot, state])
     button.click(predict, [txt, state], [chatbot, state])
 
-demo.queue().launch()
+CUSTOM_PATH = os.getenv('CUSTOM_PATH')
+app = FastAPI()
+
+app = gr.mount_gradio_app(app, demo, path=CUSTOM_PATH)
